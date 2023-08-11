@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(unzip)
+project(unzip VERSION 2.0)
 
 # Set C++ standard (change to your preferred version)
 set(CMAKE_CXX_STANDARD 20)
