@@ -1,5 +1,8 @@
-# unzipDNA_v2
--build command:
-g++ -std=c++20 -o a.exe main.cpp && a.exe
+# Calculate the DNA unzipping curve 
 
-the CMAKE somehow only generate build tree for visual studio, but vs has some issue when generate constexpr container...
+**build command (Windows)**
+
+> g++ -std=c++20 -o a.exe main.cpp && a.exe
+
+* CMAKE somehow only generates build tree for visual studio. I cannot set MAKE_*
+*  but vs has some issue when generate constexpr container...*
