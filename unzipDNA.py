@@ -42,6 +42,8 @@ def getEDNA(seq,salt_mM,kT):
     for i in range (10) :
         print (energy[i])
     print ("...")
+    print (energy[3000])
+    print ("...")
     print (energy[-1])
 #    np.savetxt('energy.txt',energy.T,delimiter = '\t',header ='energy')
     return energy

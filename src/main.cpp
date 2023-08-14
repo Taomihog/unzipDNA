@@ -9,7 +9,7 @@
 #include "../include/Constant.h"
 #include "../include/Optimization.h"
 
-#define test
+//#define test
 
 std::string readtxt_firstline(const std::string & path) {
     std::ifstream file(path);
@@ -186,7 +186,7 @@ int main(int argc, char * argv[]) {
     std::cout << std::endl << std::endl;
 
     //========================================calculate unzipping curve===================================
-    for (double extension = 500.0; extension < 4000.0; extension += 5.0) {
+    for (double extension = 0.0; extension < 6000.0; extension += 1.0) {
         double force = calc_force (extension, bp_arm, kpillar, kT, seq_energy);
         std::cout << "force is " << force << " pN at extension = " << extension- force/kpillar << " nm. \n";
     }
