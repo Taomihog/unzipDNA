@@ -1,21 +1,19 @@
-<<<<<<< HEAD
-# unzipDNA_v2
--build command:
-**g++ -std=c++20 -o unzip.exe src/main.cpp src/Optimization.cpp**
+# DNA Unzipping Curve Calculator (ver.3)
 
--how to use:
-**unzip.exe**
-or
-**unzip.exe exampleData.txt 2200 100 298 0.07**
+Build command:
 
-the CMAKE somehow only generates build tree for visual studio, but MSVC has issues generating constexpr...
-=======
-# Calculate the DNA unzipping curve 
+>**g++ -std=c++20 -fconstexpr-ops-limit=100000000000 -o unzip.exe src/main.cpp src/DNA_util.cpp**
 
-**build command (Windows)**
+*CMAKE somehow only generates build tree for visual studio, but MSVC has issues generating constexpr...*
 
-> g++ -std=c++20 -o a.exe main.cpp && a.exe
+For more information on DNA unzipping experiment and theory:
 
-* CMAKE somehow only generates build tree for visual studio. I cannot set MAKE_*
-*  but vs has some issue when generate constexpr container...*
->>>>>>> 051e763b0cc5a39a76db23bbd7b89d583fa6b4c8
+>[1] Essevaz-Roulet, Baptiste, Ulrich Bockelmann, and Francois Heslot. (1997) PNAS.
+>
+>[2] Bockelmann, Ulrich, et al. (2002) Biophysical journal.
+>
+>[3] Huguet, Josep M., et al. (2010) PNAS.
+
+I first wrote the program in Python, and realized that it was too slow for my application. To speed up the calculation, I use look-up table (LUT) to save information that supposes to be calculated in run time. These LUTs are saves in constexpr containers.
+
+It indeed took me some thinking to move majority of calculation overheads from run-time to compile time. After several attempts, I almost **"constexpred"** everyting that can be calculated ahead of time. As a result, this program is 100 times faster than the python program, 6 times faster than the Version 2 program. The only drawback is that the compile time is very long, thousands of times longer than the prototype c++ program (which does calculate many constexpr variables).

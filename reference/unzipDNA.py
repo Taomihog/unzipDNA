@@ -2,7 +2,10 @@
 """
 Created on Fri Feb 28 15:15:18 2020
 
-@author: xgao
+@author: **********************************
+
+I wrote this for my optical tweezers experiment
+But python is too slow for this calculation
 """
 import numpy as np
 #Units are pN.nm.s if not specified.
@@ -42,8 +45,6 @@ def getEDNA(seq,salt_mM,kT):
     for i in range (10) :
         print (energy[i])
     print ("...")
-    print (energy[3000])
-    print ("...")
     print (energy[-1])
 #    np.savetxt('energy.txt',energy.T,delimiter = '\t',header ='energy')
     return energy
@@ -65,25 +66,10 @@ def phi_ds (F,LPDS,KDS,kT):
 def phi_ds_df (F,LPDS,KDS,kT):
     return 1+0.25*np.sqrt(kT/(F*F*F*LPDS))+1/KDS
 
-
-#def Zlinker(F,DNA_parameters):
-#    kpillar,LPSS,KSS,L0SS,jss,LPDS,KDS,L0DS,jds,kT = DNA_parameters
-#    return Z_lev(kpillar,F)+2*jss*L0SS*phi_ss(F,LPSS,KSS,kT)+jds*L0DS*phi_ds(F,LPDS,KDS,kT)#There is a factor of 2 in ssDNA length!!!
-#def Jac_delta_Zlinker(F,z0,DNA_parameters):
-#    kpillar,LPSS,KSS,L0SS,jss,LPDS,KDS,L0DS,jds,kT = DNA_parameters
-#    return -(Z_lev_df(kpillar,F)+2*jss*phi_ss_df(F,LPSS,KSS,kT)+jds*L0DS*phi_ds_df (F,LPDS,KDS,kT)) 
-
-#def Zlinker(F,DNA_parameters):
-#    kpillar,LPSS,KSS,L0SS,jss,LPDS,KDS,L0DS,jds,kT = DNA_parameters
-#    return F/kpillar+2*jss*L0SS*((1/np.tanh(2*F*LPSS/kT)-kT/(2*F*LPSS))*(1+F/KSS))+\
-#            jds*L0DS*(1-0.5*np.sqrt(kT/(F*LPDS))+F/KDS)
-#            #There is a factor of 2 in ssDNA length!!!
 def Zlinker(F,DNA_parameters):
-#    kpillar,LPSS,KSS,L0SS,jss,LPDS,KDS,L0DS,jds,kT = DNA_parameters
     return F/DNA_parameters[0]+\
                          2*DNA_parameters[4]*DNA_parameters[3]*((1/np.tanh(2*F*DNA_parameters[1]/DNA_parameters[9])-DNA_parameters[9]/(2*F*DNA_parameters[1]))*(1+F/DNA_parameters[2]))+\
                          DNA_parameters[8]*DNA_parameters[7]*(1-0.5*np.sqrt(DNA_parameters[9]/(F*DNA_parameters[5]))+F/DNA_parameters[6])
-            #There is a factor of 2 in ssDNA length!!!
 
 def Jac_delta_Zlinker(F,z0,DNA_parameters):
     kpillar,LPSS,KSS,L0SS,jss,LPDS,KDS,L0DS,jds,kT = DNA_parameters
@@ -113,16 +99,8 @@ def delta_Zlinker(F,z0,DNA_parameters):
     return z0-(F/kpillar+2*jss*L0SS*((1/np.tanh(2*F*LPSS/kT)-kT/(2*F*LPSS))*(1+F/KSS))+\
             jds*L0DS*(1-0.5*np.sqrt(kT/(F*LPDS))+F/KDS))
 
-#def delta_Zlinker2(F,z0,DNA_parameters):
-#    return np.square(z0-Zlinker(F,DNA_parameters))
-#def delta_Zlinker2(F,z0,DNA_parameters):
-#    kpillar,LPSS,KSS,L0SS,jss,LPDS,KDS,L0DS,jds,kT = DNA_parameters
-#    #1      2    3   4    5   6    7   8    9   10
-#    return np.square(z0-(F/kpillar+2*jss*L0SS*((1/np.tanh(2*F*LPSS/kT)-kT/(2*F*LPSS))*(1+F/KSS))+\
-#            jds*L0DS*(1-0.5*np.sqrt(kT/(F*LPDS))+F/KDS)))
+
 def delta_Zlinker2(F,z0,DNA_parameters):
-#    kpillar,LPSS,KSS,L0SS,jss,LPDS,KDS,L0DS,jds,kT = DNA_parameters
-    #0      1    2   3    4   5    6   7    8   9    DNA_parameters[9]
     return np.square(z0-(F/DNA_parameters[0]+\
                          2*DNA_parameters[4]*DNA_parameters[3]*((1/np.tanh(2*F*DNA_parameters[1]/DNA_parameters[9])-DNA_parameters[9]/(2*F*DNA_parameters[1]))*(1+F/DNA_parameters[2]))+\
                          DNA_parameters[8]*DNA_parameters[7]*(1-0.5*np.sqrt(DNA_parameters[9]/(F*DNA_parameters[5]))+F/DNA_parameters[6])))
@@ -133,31 +111,16 @@ from scipy.optimize import minimize
 def FindForce(z0,DNA_parameters):
 #    kpillar,LPSS,KSS,L0SS,jss,LPDS,KDS,L0DS,jds,kT = DNA_parameters
     fguess=10
-    #This minimization can be further optimized because the slope can be exactily calculated, Newton method should be better
-    
-#    res = optimize.root_scalar(delta_Zlinker, args = (z0,DNA_parameters), fprime=Jac_delta_Zlinker, method='newton',x0 = fguess)
-##    print (res)
-#    return res.root
     
     res = minimize(delta_Zlinker2, fguess, args = (z0,DNA_parameters), method='Nelder-Mead', tol=1e-3)#Nelder-Mead
 #    print(res)
     return res.x[0]
 
 from scipy.integrate import quad
-#def Zlinker_integ(F,kpillar,LPSS,KSS,L0SS,jss,LPDS,KDS,L0DS,jds,kT):
-#    DNA_parameters = kpillar,LPSS,KSS,L0SS,jss,LPDS,KDS,L0DS,jds,kT
-#    return Zlinker(F,DNA_parameters)
 def Zlinker_integ(F,kpillar,LPSS,KSS,L0SS,jss,LPDS,KDS,L0DS,jds,kT):
 #    DNA_parameters = kpillar,LPSS,KSS,L0SS,jss,LPDS,KDS,L0DS,jds,kT
     return Zlinker(F,(kpillar,LPSS,KSS,L0SS,jss,LPDS,KDS,L0DS,jds,kT))
 
-'''has been integrated into getEtot
-def getElinker (z0,DNA_parameters):
-    f = FindForce(z0,DNA_parameters)
-#    print (f)
-#    return f*z0-quad(Zlinker_integ, 0.1, f, args=(DNA_parameters))[0]
-    return f,f*z0-quad(Zlinker_integ, 0.1, f, args=(DNA_parameters))[0]
-'''
 def getEtot (z0,DNA_parameters,EDNA):
     #DNA_parameters = kpillar,LPSS,KSS,L0SS,j,LPDS,KDS,L0DS,jds,kT
     if DNA_parameters[4] <0: 
@@ -171,20 +134,10 @@ def getEtot (z0,DNA_parameters,EDNA):
         Elinker = f*z0-quad(Zlinker_integ, 0.1, f, args=(DNA_parameters))[0]
         return f, EDNA[DNA_parameters[4]]+Elinker, Elinker, EDNA[DNA_parameters[4]]
 
-def E_ss (F,lp,K,l0):
-    #Smith 1996 science (?need ref.)
-    return 0
-
-def E_ds (F,lp,K,l0):
-    #Odijk 1995 macromolecules
-    return 0
-
-
 def calculate (EDNA, DNA_parameters):
     j_max =len(EDNA)-1
     print ('j_max = ', j_max)
     kpillar,LPSS,KSS,L0SS,jss,LPDS,KDS,L0DS,jds,kT = DNA_parameters
-#    plotForce(DNA_parameters)
 
     #start calculation
     z0_init = jds*L0DS+10/kpillar #10 pN as the start point
