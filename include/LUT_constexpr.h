@@ -13,10 +13,10 @@
 //k = an index to indicate the total length of the system
 
 //use a pre-calucated constexpr LUT will speed up the calculation by at least 1 order!!
-constexpr int j_size = 400;//size of the j index dimension of the LUT. basically the max length of trunk
-constexpr int ext_size = 400;//size of the extension dimension of LUT, the larger the number, the more precise the result.
-constexpr int ext_resolution = 20;//resolution of the total extension dimention: actual total extension is index * resolution
-constexpr int j_resolution = 20;//resolution of the j-index dimention: actual j is index * resolution
+constexpr int j_size = 200;//size of the j index dimension of the LUT. basically the max length of trunk
+constexpr int ext_size = 200;//size of the extension dimension of LUT, the larger the number, the more precise the result.
+constexpr int ext_resolution = 40;//resolution of the total extension dimention: actual total extension is index * resolution
+constexpr int j_resolution = 40;//resolution of the j-index dimention: actual j is index * resolution
 
 //coarse settings for testing purposes
 // constexpr int j_size = 20;
