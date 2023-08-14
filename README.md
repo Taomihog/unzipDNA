@@ -14,6 +14,6 @@ For more information on DNA unzipping experiment and theory:
 >
 >[3] Huguet, Josep M., et al. (2010) PNAS.
 
-I first wrote the program in Python, and realized that it was too slow for my application. To speed up the calculation, I use look-up table (LUT) to save information that supposes to be calculated in run time. These LUTs are saves in constexpr containers.
+I first wrote the program in Python, and realized that it was too slow for my application. To speed up the calculation, I use look-up table (LUT) to save information that supposes to be calculated in run time. These LUTs are saved in constexpr containers.
 
-It indeed took me some thinking to move majority of calculation overheads from run-time to compile time. After several attempts, I almost **"constexpred"** everyting that can be calculated ahead of time. As a result, this program is 100 times faster than the python program, 6 times faster than the Version 2 program. The only drawback is that the compile time is very long, thousands of times longer than the prototype c++ program (which does calculate many constexpr variables).
+It indeed took me some thinking to move majority of calculation overheads from run-time to compile time. After several attempts, I almost **"constexpred"** everyting that can be calculated ahead of time. As a result, this program is 100 times faster than the python program, 6 times faster than the Version 2 program. The only drawback is that the compile time is very long, thousands of times longer than the prototype c++ program (which does not calculate many constexpr variables).
