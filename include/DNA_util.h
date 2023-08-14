@@ -17,7 +17,7 @@ namespace DNAsequence {
     std::string readtxt_firstline(const std::string & path);
 
     //utilities to convert bp to energy
-    const double factor_pNnm = Const::pNnm * Const::Joul / Const::Avogadro;//convert to 'pN-nm' unit;
+    const double factor_pNnm = Const::pNnm * Const::Joul / Const::Avogadro / Const::kT;//convert to 'pN-nm' unit;
     double lookup_bp_energy(char bp1, char bp2);
     std::vector<double> calculate_sequence_energy(const std::string & sequence);
 }

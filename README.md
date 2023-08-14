@@ -1,12 +1,15 @@
 # DNA Unzipping Curve Calculator (ver.3)
 
-Build command:
+Build command (high resolution look-up tables):
 
->**g++ -std=c++20 -fconstexpr-ops-limit=100000000000 -o unzip.exe src/main.cpp src/DNA_util.cpp**
+>**g++ -std=c++20 -fconstexpr-ops-limit=100000000000 -DJ_SIZE=256 -DEXT_SIZE=256 -o unzip.exe src/main.cpp src/DNA_util.cpp**
 
 *CMAKE somehow only generates build tree for visual studio, but MSVC has issues generating constexpr...*
 
-For more information on DNA unzipping experiment and theory:
+The executable built can be run like "unzip.exe exampleData.txt", where "exampleData.txt" file contains the DNA sequence to be unzipped.
+
+
+**For more information on DNA unzipping experiment and theory:**
 
 >[1] Essevaz-Roulet, Baptiste, Ulrich Bockelmann, and Francois Heslot. (1997) PNAS.
 >

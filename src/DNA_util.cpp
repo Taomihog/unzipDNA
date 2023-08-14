@@ -101,6 +101,7 @@ namespace LUT_util {
     }
 
     void lookup(double j0, double extension, double & force, double & energy) {
+
         if (j0 < 0 || j0 >= j_size * j_resolution || extension < 0 || extension >= ext_size * ext_resolution) {
             std::cerr << "Error: lookup_force index out of range";
             force = - 1.0;
@@ -118,11 +119,9 @@ namespace LUT_util {
 
         double j2 = j1 + 1;
         double k2 = k1 + 1;
-        
-        //I tried, but the calculation is too tedious...
-        //so: https://en.wikipedia.org/wiki/Bilinear_interpolation
-        //choose "repeated linear interp"
-        //may try polyn fit method later (are they the same?).
+
+        //https://en.wikipedia.org/wiki/Bilinear_interpolation
+
         force = Lut_force[j1][k1] * (j2 - j) * (k2 - k) + 
                 Lut_force[j1][k2] * (j2 - j) * (k - k1) + 
                 Lut_force[j2][k1] * (j - j1) * (k2 - k) + 
