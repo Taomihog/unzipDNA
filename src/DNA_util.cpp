@@ -11,11 +11,6 @@
 
 namespace DNAsequence {
 
-    void print_LUT_info() {
-        std::cout << "LUT extension resolution (nm): " + ext_resolution << std::endl;
-        std::cout << "LUT j_unzip resolution: " + j_resolution << std::endl;
-    }
-
     std::string readtxt_firstline(const std::string & path) {
         std::ifstream file(path);
 
@@ -68,6 +63,11 @@ namespace DNAsequence {
 
 namespace LUT_util {
 
+    void print_LUT_info() {
+        std::cout << "LUT extension resolution (nm): " + ext_resolution << std::endl;
+        std::cout << "LUT j_unzip resolution: " + j_resolution << std::endl;
+    }
+
     void test_print_lut (int j0, int k0, int range) {
         int jmax = (j0 + range) > j_size ? j_size : j0 + range;
         int kmax = (k0 + range) > ext_size ? ext_size : k0 + range;
@@ -103,14 +103,13 @@ namespace LUT_util {
     void lookup(double j0, double extension, double & force, double & energy) {
         if (j0 < 0 || j0 >= j_size * j_resolution || extension < 0 || extension >= ext_size * ext_resolution) {
             std::cerr << "Error: lookup_force index out of range";
+            force = - 1.0;
+            energy = -1.0;
             return;
         }
 
         double j = j0 / static_cast<double>(j_resolution);
         double k = extension / static_cast<double>(ext_resolution);
-
-        
-        //std::cout << j << '\t' << k << std::endl;
         
         double j1 = std::floor(j);
         double k1 = std::floor(k);

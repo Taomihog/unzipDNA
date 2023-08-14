@@ -13,10 +13,10 @@
 //k = an index to indicate the total length of the system
 
 //use a pre-calucated constexpr LUT will speed up the calculation by at least 1 order!!
-constexpr int j_size = 800;//size of the j index dimension of the LUT. basically the max length of trunk
-constexpr int ext_size = 800;//size of the extension dimension of LUT, the larger the number, the more precise the result.
-constexpr int ext_resolution = 10;//resolution of the total extension dimention: actual total extension is index * resolution
-constexpr int j_resolution = 10;//resolution of the j-index dimention: actual j is index * resolution
+constexpr int j_size = 400;//size of the j index dimension of the LUT. basically the max length of trunk
+constexpr int ext_size = 400;//size of the extension dimension of LUT, the larger the number, the more precise the result.
+constexpr int ext_resolution = 20;//resolution of the total extension dimention: actual total extension is index * resolution
+constexpr int j_resolution = 20;//resolution of the j-index dimention: actual j is index * resolution
 
 //coarse settings for testing purposes
 // constexpr int j_size = 20;
@@ -111,7 +111,7 @@ constexpr auto Lut_energy = []{
 	for (int j = 0; j < j_size; ++j) {
 		for (int k = 0; k < ext_size; ++k) {
 			f = Lut_force[j][k];
-			arr[j][k] = f == 0.0 ? 0.0 : 0.5 * f * f / Const::PillarStiffness + le_ds(f) + le_ss(f, j);;
+			arr[j][k] = 0.5 * f * f / Const::PillarStiffness + le_ds(f) + le_ss(f, j * j_resolution);
 		}
 	}
 

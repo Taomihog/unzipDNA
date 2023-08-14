@@ -26,8 +26,8 @@ int main(int argc, char * argv[]) {
     std::cout << "Sequence energy calculate difference from python code: "<< *(seq_energy.cend() - 1) - 41740.760955375 << std::endl;// no difference, good
     
     //prepare file for output
-    std::string path_out; 
-    std::ofstream fout(path_out + "out_" + argv[1]);
+    std::string path_out = path_out + "out_" + argv[1]; 
+    std::ofstream fout(path_out);
     if (!fout) {
         std::cerr << "Error opening file." << std::endl;
         return 1;
@@ -38,15 +38,22 @@ int main(int argc, char * argv[]) {
     std::vector<double> temp_e(seq_energy.size(), 0.0);
     std::vector<double> temp_f(seq_energy.size(), 0.0);
 
+    std::vector<double> extn_arr;
+    for (int extension = 0; extension < 1.2 * seq_energy.size() + 0.35 * Const::ArmLength; ++extension){
+        extn_arr.emplace_back(extension);
+    }
     //loop start
-    for (int extension = 0; extension < 1.2 * seq_energy.size() + 0.35 * Const::ArmLength; ++extension) {
+    for (auto extension : extn_arr) {
 
         double force, energy;
+        //double dforce, denergy, energy0;
 
         double min_e = 1.0e100;
 
         for (int j = 0; j < seq_energy.size(); ++j) {
             LUT_util::lookup(j,extension,force,energy);
+            force = find_force(j, extension);
+            energy = 0.5 * force * force / Const::PillarStiffness + le_ds(force) + le_ss(force, j);
             temp_f.at(j) = force;
             temp_e.at(j) = energy + seq_energy[j];
             if (min_e > temp_e.at(j)) {
@@ -79,7 +86,7 @@ int main(int argc, char * argv[]) {
         
         //output
         char delimit = '\t';
-        if (extension % 1000 == 0) {
+        if (static_cast<int>(extension) % 1000 == 0) {
             std::cout << extension << delimit << Fprob/prob << delimit << std::sqrt(FFprob/prob -  (Fprob/prob) * (Fprob/prob)) 
                                     << delimit << Jprob/prob << delimit << std::sqrt(JJprob/prob -  (Jprob/prob) * (Jprob/prob)) << std::endl;
         }
@@ -90,7 +97,7 @@ int main(int argc, char * argv[]) {
 
     // Close the file
     fout.close();
-    std::cout << "Table has been written to 'table.txt'." << std::endl;
+    std::cout << "Table has been written to " + path_out << std::endl;
     
     return 0;
 }
