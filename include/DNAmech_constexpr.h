@@ -3,29 +3,6 @@
 #include "Math_constexpr.h"
 using namespace Math_constexpr;
 
-//the DNA structure is something like this:
-
-//             ↑Force
-//             ||
-//             ||
-//               =================
-//             ||
-//             ||
-//             ↓Force
-
-//This is called a "Y structure". A Y structure has 2 dsDNA arms and a dsDNA trunk.
-//when the two arms are stretched as shown, the trunk will be unzipped.
-//the force during this "unzip" precess is measured against the end-to-end distance of the arms. 
-//The sequence of the trunk determines the "force vs extension" profile.
-//And can be calculated theoretically.
-
-//for more information, see:
-
-//[1] B. Essevaz-Roulet, U. Bockelmann, and F. Heslot (1997) PNAS  
-//[2] Bockelmann, Ulrich, et al. (2002)Biophysical journal 
-//[3] Huguet, Josep M., et al. (2010) PNAS
-
-
 //================================WLC/FJC model: parameter definitions==================================
 //phi = x/L (L = contour length)
 //alpha = fA/kT (A = persistence length)

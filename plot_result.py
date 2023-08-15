@@ -14,7 +14,7 @@ print(cppResult.columns)
 
 fig,ax = plt.subplots()
 ax.plot(pyResult['# zMean'],pyResult['FMean'], "-b", label = "by original python code (may not be 100% correct)")
-ax.plot(cppResult['extension (nm)'],cppResult['average force (pN)'], "-r", label = "by this program")
+ax.plot(cppResult['DNA extension (nm)'],cppResult['average force (pN)'], "-r", label = "by this program")
 plt.ylim(0,30)
 plt.xlim(500,5000)
 plt.show()
