@@ -2,15 +2,14 @@
 
 #include <array>
 
-#include "Math_constexpr.h"
-#include "Constant_constexpr.h"
-#include "DNAmech_constexpr.h"
+#include "../include/Math_constexpr.h"
+#include "../include/Constant_constexpr.h"
+#include "../include/DNAmech_constexpr.h"
 
 //==========================================constexpr LUT============================================
-//define resolution and size of lut_f and lut_e
-//i = arm_length in bp (not used now, otherwise the lut is too big)
+//define resolution and size of the look-up tables
 //j = unzipped #bp
-//k = an index to indicate the total length of the system
+//ext = an index to indicate the total length of the system
 
 #ifndef J_SIZE
 #define J_SIZE 256
@@ -42,31 +41,42 @@ constexpr int j_resolution = EXT_RESELUTION;//resolution of the j-index dimentio
 
 using lut_type = std::array<std::array<double,ext_size>,j_size>;
 
+//====================================DNA mechanical parameters======================================
+//These are not constants..and should be salt dependent and temperature dependent
+//But I didn't consider these as dependent variables (for simplicity)
+
+constexpr double LPDS = 51.97;//dsDNA persistence length
+constexpr double KDS = 1318;//dsDNA elastic modulus
+constexpr double L0DS = 0.338;//dsDNA contour length per bp
+constexpr double LPSS = 0.765;//ssDNA persistence length
+constexpr double KSS = 470;//ssDNA elastic modulus  
+constexpr double L0SS = 0.554;//ssDNA contour length per nt
+
 
 //=================================utility functions to create constexpr lut=================================
 constexpr double lz_ss (double force, int j) {
 //ssDNA's length per base
-    return 2 * j * Const::L0SS * alpha2phi_Smith95_hf(force * Const::LPSS / Const::kT, Const::KSS * Const::LPSS / Const::kT);
+    return 2 * j * L0SS * alpha2phi_Smith95_hf(force * LPSS / Condition::kT, KSS * LPSS / Condition::kT);
 }
 
 constexpr double lz_ds (double force) {
 //dsDNA's length per base
-    return Const::ArmLength * Const::L0DS * alpha2phi_Odijk95(force * Const::LPDS / Const::kT, Const::KDS * Const::LPDS / Const::kT);
+    return Condition::ArmLength * L0DS * alpha2phi_Odijk95(force * LPDS / Condition::kT, KDS * LPDS / Condition::kT);
 }
 
 constexpr double le_ss (double force, int j) {
 //function version of ssDNA's energy per bp:
-    return 2 * j * Const::kT * Const::L0SS * integ_alphadphi_Odijk95(force * Const::LPSS / Const::kT, Const::KSS * Const::LPSS / Const::kT) / Const::LPSS;
+    return 2 * j * Condition::kT * L0SS * integ_alphadphi_Smith95_hf(force * LPSS / Condition::kT, KSS * LPSS / Condition::kT) / LPSS;
 }
 
 constexpr double le_ds (double force) {
 //function version of dsDNA's energy per bp:
-    return Const::ArmLength * Const::kT * Const::L0DS * integ_alphadphi_Smith95_hf(force * Const::LPDS / Const::kT, Const::KDS * Const::LPDS / Const::kT) / Const::LPDS;
+    return Condition::ArmLength * Condition::kT * L0DS * integ_alphadphi_Odijk95(force * LPDS / Condition::kT, KDS * LPDS / Condition::kT) / LPDS;
 }
 
 //=====================find the force for certain total extension======================
 constexpr double delta_ext(double force, double j, double ext) {//func used to find force so the system total extension = ext
-    return ext - force/Const::PillarStiffness - lz_ds (force) - lz_ss (force, j);
+    return ext - force/Condition::PillarStiffness - lz_ds (force) - lz_ss (force, j);
 }
 
 constexpr double find_force(int j, double ext) {//j == length of unzipped trunk, ext total extension
@@ -89,7 +99,7 @@ constexpr double find_force(int j, double ext) {//j == length of unzipped trunk,
         double ym = delta_ext(fm, j, ext);
         
         if (Math_constexpr::Abs(ym) <= tor_binary_search) {
-            return f2;
+            return fm;
         }
 
         //(&& has higher precedence)
@@ -127,7 +137,7 @@ constexpr auto Lut_energy = []{
     for (int j = 0; j < j_size; ++j) {
         for (int k = 0; k < ext_size; ++k) {
             f = Lut_force[j][k];
-            arr[j][k] = (0.5 * f * f / Const::PillarStiffness + le_ds(f) + le_ss(f, j * j_resolution))/Const::kT;
+            arr[j][k] = (0.5 * f * f / Condition::PillarStiffness + le_ds(f) + le_ss(f, j * j_resolution))/Condition::kT;
         }
     }
 

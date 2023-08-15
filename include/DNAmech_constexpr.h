@@ -25,6 +25,7 @@ using namespace Math_constexpr;
 //[2] Bockelmann, Ulrich, et al. (2002)Biophysical journal 
 //[3] Huguet, Josep M., et al. (2010) PNAS
 
+
 //================================WLC/FJC model: parameter definitions==================================
 //phi = x/L (L = contour length)
 //alpha = fA/kT (A = persistence length)
