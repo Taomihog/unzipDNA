@@ -33,6 +33,8 @@ I first wrote the program in Python, and realized that it was too slow for my ap
 
 It indeed took me some thinking to move majority of calculation overheads from run-time to compile time. After several attempts, I almost **"constexpred"** everyting that can be calculated ahead of time. As a result, this program is 100 times faster than the python program, 6 times faster than the Version 2 program. The only drawback is that the compile time is very long, thousands of times longer than the prototype c++ program (which does not calculate many constexpr variables).  
 
+On Aug/15/2023, I implemented multithreading. The execution speed increased by another 10-20 times.  
+
 ## DNA unzipping theory
 
 For more information on DNA unzipping experiment and theory:

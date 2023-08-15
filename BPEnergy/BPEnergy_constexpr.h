@@ -2,8 +2,8 @@
 
 namespace BPEnergy {
     
-    constexpr double SaltConc = 100; //salt concentration in mM;
-    const double EffSaltConc = Math_constexpr::Ln(SaltConc * 0.001) / 298.0;//298.0 K is where the energy was measured in Huguet paper
+    constexpr double SaltConc = 100; //salt concentration in mM, this the the salt concentraion or the unzip experiment;
+    const double EffSaltConc = Math_constexpr::Ln(SaltConc * 0.001) / 298.0;//298.0 K is where the energy was measured in Huguet paper, it is not equal to Condition::temperature
 
     //====================================basepair energy measured by Huguet et al===============================
     //ref: Huguet, Josep M., et al. (2010) PNAS
