@@ -34,7 +34,7 @@ using namespace Math_constexpr;
 //====================================Marko-Siggia 1995 WLC========================================
 constexpr double phi2alpha_MS(double phi){ return phi + 0.25 / Square(1.0 - phi) - 0.25; }//need to explicitly declare "inline" functions
 //For now I haven't implement constexpr cos() and acos(), so I cannot make this function constexpr.
-// double alpha2phi_MS(double alpha) {//My ppt: 200416_Xiang_Detect the buckling transition in force or torque
+// double alpha2phi_MS(double alpha) {//My ppt: xxxxxxxx
     
 //     alpha = alpha - 0.75;
 //     double p = -Square(alpha) / 3.0;
