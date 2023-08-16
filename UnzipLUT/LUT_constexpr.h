@@ -41,22 +41,10 @@ constexpr int j_resolution = EXT_RESELUTION;//resolution of the j-index dimentio
 
 using lut_type = std::array<std::array<double,ext_size>,j_size>;
 
-//====================================DNA mechanical parameters======================================
-//These are not constants..and should be salt dependent and temperature dependent
-//But I didn't consider these as dependent variables (for simplicity)
-
-constexpr double LPDS = 51.97;//dsDNA persistence length
-constexpr double KDS = 1318;//dsDNA elastic modulus
-constexpr double L0DS = 0.338;//dsDNA contour length per bp
-constexpr double LPSS = 0.765;//ssDNA persistence length
-constexpr double KSS = 470;//ssDNA elastic modulus  
-constexpr double L0SS = 0.554;//ssDNA contour length per nt
-
-
 //=================================utility functions to create constexpr lut=================================
 constexpr double lz_ss (double force, int j) {
 //ssDNA's length per base
-    return 2 * j * L0SS * alpha2phi_Smith95_hf(force * LPSS / Condition::kT, KSS * LPSS / Condition::kT);
+    return 2.0 * j * L0SS * alpha2phi_Smith95(force * LPSS / Condition::kT, KSS * LPSS / Condition::kT);
 }
 
 constexpr double lz_ds (double force) {
@@ -66,7 +54,7 @@ constexpr double lz_ds (double force) {
 
 constexpr double le_ss (double force, int j) {
 //function version of ssDNA's energy per bp:
-    return 2 * j * Condition::kT * L0SS * integ_alphadphi_Smith95_hf(force * LPSS / Condition::kT, KSS * LPSS / Condition::kT) / LPSS;
+    return 2.0 * j * Condition::kT * L0SS * integ_alphadphi_Smith95(force * LPSS / Condition::kT, KSS * LPSS / Condition::kT) / LPSS;
 }
 
 constexpr double le_ds (double force) {
@@ -82,14 +70,18 @@ constexpr double delta_ext(double force, double j, double ext) {//func used to f
 constexpr double find_force(int j, double ext) {//j == length of unzipped trunk, ext total extension
     //simple binary search to get force so calc_z_diff(force) == 0
     //force function must be monotonic
-    double f1 = 0.00001;
-    double f2 = 10000.0;
+    double f1 = 0.001;
+    double f2 = 1000.0;
 
     double y1 = delta_ext(f1, j, ext);
     double y2 = delta_ext(f2, j, ext);
 
     if (y1 * y2 >= 0) {
-        return 0.0;//force is out of the range (f1,f2), return 0.0 (usually this is due to the force less than f1)
+        if (y1 > 0){
+            return f1;//force is too small
+        } else {
+            return f2;//force is too large
+        }
     }
 
 	int cnt = 0;//in case the root is not found
@@ -143,3 +135,6 @@ constexpr auto Lut_energy = []{
 
     return arr;
 }();
+
+
+

@@ -1,6 +1,8 @@
 #pragma once
 
 #include <limits>
+#include <array>
+
 
 namespace Math_constexpr{
     
@@ -50,6 +52,14 @@ namespace Math_constexpr{
         return curr;
     }
 
+    constexpr double Pow(double x, int n) {
+        double res = 1;
+        for (int i = 0; i < n; ++i){
+            res *= x;
+        }
+        return res;
+    }
+
     constexpr double Square(double x){
         return x * x;
     }
@@ -94,8 +104,40 @@ namespace Math_constexpr{
         }
         return 2.0 * sum;
     }
+
     
+    constexpr double Coth(double x) {
+        if ( x > 7.9608220) {
+            // I compared Coth(x) and the np.cosh(x)/np.sinh(x), and 1, and figured out this value.
+            //above this value, 1.0 is more close to Coth(x).
+            //this value depends on how many terms are used of course.
+            return 1.0;
+        }
+        double product = 1.0;//x**0/0!
+        double sum1 = product;
+        double sum2 = 0.0;
+        int i = 1;
+        for (; i <= 15; ++i){
+            product *= x;
+            product /= 2*i - 1;//x**1/1!, ..
+            sum2 += product;
+            product *= x;
+            product /= 2*i; //x**2/2!, ...
+            sum1 += product;
+        }
+        product *= x;
+        product /= 2*i + 1;//x**1/1!, ..
+        sum2 += product;
+        
+        return sum1/sum2;
+    }
+
+
     //some tests
+
+    constexpr double Coth_test_res = Coth(0.9);//1.3960672530300118350929600819912
+    static_assert(Coth_test_res > 1.3960672530);//1.3960672525087865
+    static_assert(Coth_test_res < 1.3960672531);
 
     constexpr double Sqrt_test_res = Sqrt(4.0);
     static_assert(Sqrt_test_res > 1.9999999999);

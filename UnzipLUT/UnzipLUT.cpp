@@ -30,7 +30,7 @@ namespace UnzipLUT {
         std::cout << std::endl;
     }
 
-    void test_print_lut (int j0, int k0, int range, std::ofstream fout){
+    void test_print_lut (int j0, int k0, int range, std::ofstream fout){//no way to give fout a default value?
         int jmax = (j0 + range) > j_size ? j_size : j0 + range;
         int kmax = (k0 + range) > ext_size ? ext_size : k0 + range;
 

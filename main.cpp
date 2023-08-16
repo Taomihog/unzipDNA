@@ -106,7 +106,7 @@ dp calculate_array(int extension, const std::vector<double> & seq_energy) {
     for (int j = 0; j < seq_energy.size(); ++j) {
         
         UnzipLUT::lookup(j,extension,temp_f.at(j),temp_e.at(j));
-        temp_e.at(j) +=seq_energy[j];
+        temp_e.at(j) += seq_energy[j];
 
         if (min_e > temp_e.at(j)) {
             min_e = temp_e.at(j);
@@ -152,6 +152,7 @@ dp calculate_array(int extension, const std::vector<double> & seq_energy) {
 //==================================================main===========================================
 
 int main(int argc, char * argv[]) {
+
     auto start = Clock::now();
 
     if (argc <2) {
@@ -162,7 +163,7 @@ int main(int argc, char * argv[]) {
     const std::string sequence = readtxt_firstline(argv[1]);
     const std::vector<double> seq_energy = DNAsequence::calculate_sequence_energy(sequence);
     //test, the "41740.760955375" is from my python code
-    std::cout << "Sequence energy differs from python program by "<< *(seq_energy.cend() - 1) - 10140.0933068047 << std::endl;// no difference, good
+    //std::cout << "Sequence energy differs from python program by "<< *(seq_energy.cend() - 1) - 10140.0933068047 << std::endl;// no difference, good
     
     int numThreads = std::thread::hardware_concurrency();
     std::cout << "Number of threads: " << numThreads << std::endl;
