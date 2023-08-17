@@ -39,27 +39,69 @@ constexpr int j_resolution = EXT_RESELUTION;//resolution of the j-index dimentio
 // constexpr int ext_resolution = 400;
 // constexpr int j_resolution = 400;
 
+
+// constexpr size_t _smith95_size = 2000;
+// constexpr double _smith95_f(double alpha){
+//     return alpha2phi_Smith95(alpha, KSS * LPSS / Condition::kT)
+// }
+
+// constexpr auto _lut_f_smith95 = [] {
+//     std::array<double, _smith95_size> arr;
+//     const double start = 0.001;//439286.205
+//     const double scale = 1.01;
+//     arr[0] = 0.0;
+
+//     for (size_t i = 1; i < _smith95_size; ++j) {
+//             arr[j] += 0.5 * prev;
+//             prev = 0.5 * _smith95_f(i);
+//             arr[j] += 0.5 * prev;
+//     }
+//     return arr;
+// }
+
+// constexpr auto _lut_e_smith95 = [] {
+
+//     std::array<double, _smith95_size> arr;
+//     double sum = 0.0;
+//     double prev = sum;
+//     arr[0] = 0.0;
+
+//     for (size_t i = 1; i < _smith95_size; ++j) {
+//             arr[j] += 0.5 * prev;
+//             prev = 0.5 * _f_smith95(i);
+//             arr[j] += 0.5 * prev;
+//     }
+//     return arr;
+// }();
+
+
+
+
 using lut_type = std::array<std::array<double,ext_size>,j_size>;
 
 //=================================utility functions to create constexpr lut=================================
-constexpr double lz_ss (double force, int j) {
-//ssDNA's length per base
-    return 2.0 * j * L0SS * alpha2phi_Smith95(force * LPSS / Condition::kT, KSS * LPSS / Condition::kT);
-}
 
 constexpr double lz_ds (double force) {
 //dsDNA's length per base
     return Condition::ArmLength * L0DS * alpha2phi_Odijk95(force * LPDS / Condition::kT, KDS * LPDS / Condition::kT);
 }
 
-constexpr double le_ss (double force, int j) {
-//function version of ssDNA's energy per bp:
-    return 2.0 * j * Condition::kT * L0SS * integ_alphadphi_Smith95(force * LPSS / Condition::kT, KSS * LPSS / Condition::kT) / LPSS;
+constexpr double lz_ss (double force, int j) {
+//ssDNA's length per base
+    return 2.0 * j * L0SS * alpha2phi_Smith95(force * LPSS / Condition::kT, KSS * LPSS / Condition::kT);
 }
+
 
 constexpr double le_ds (double force) {
 //function version of dsDNA's energy per bp:
     return Condition::ArmLength * Condition::kT * L0DS * integ_alphadphi_Odijk95(force * LPDS / Condition::kT, KDS * LPDS / Condition::kT) / LPDS;
+}
+
+
+
+constexpr double le_ss (double force, int j) {
+//function version of ssDNA's energy per bp:
+    return 2.0 * j * Condition::kT * L0SS * integ_alphadphi_Smith95(force * LPSS / Condition::kT, KSS * LPSS / Condition::kT) / LPSS;
 }
 
 //=====================find the force for certain total extension======================

@@ -184,8 +184,9 @@ int main(int argc, char * argv[]) {
         result_array.emplace_back(result.get());
 
     //prepare file for output
-    const std::string path_in(argv[1]);
-    std::string path_out = creat_path_out(path_in);
+    
+    //const std::string path_in(argv[1]);
+    std::string path_out = argc >= 3 ? argv[2] : creat_path_out(argv[1]);
 
     std::ofstream fout(path_out);
     if (!fout) {

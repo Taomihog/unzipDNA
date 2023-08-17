@@ -37,3 +37,7 @@ reference/*
 *.exe
 *.out
 *.app
+
+
+*.csv
+*.txt
