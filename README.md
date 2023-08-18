@@ -1,42 +1,50 @@
 # DNA Unzipping Curve Calculator
   
-## How to build the project
+## Command For Compilation  
 
-This command should work on Windows and Linux.
+### Compile
+
+Use this command for compiling on both Windows and Linux systems:  
   
 >g++ -std=c++20 -fconstexpr-ops-limit=100000000000 main.cpp utils.cpp -DJ_SIZE=200 -DEXT_SIZE=200 -o UnzipDNA.exe
 
-For Windows OS, run **build_project.bat** to build with additional options and testing.  If the batch file is run successfully, you should see something like this:
+The **`J_SIZE`** macro dictates the lookup table size. Bigger values enhance accuracy but increase compilation times.  
+  
+For Windows OS, employ the **build_project.bat** script to enable additional options and tests. Successful execution should yield an output like this:  
 
 ![image](doc/Compile_time_200x200.png)
 
-(For Linux users, ChatGPT should be able to translate the .bat file to a shell script.)  
-
-The lookup table size is controlled by macro **J_SIZE**. The larger the number, the more accurate the result. Increasing this number can significantly increase the compiling time.
+*Note: Note: Linux users can translate the **.bat** file to a shell script using ChatGPT*  
   
-## Do some tests using the example data
+### Running Tests
 
-I attached an example DNA sequence ([genbank CP017100](https://www.ncbi.nlm.nih.gov/nuccore/CP017100)), you can run the executable like this:  
+Execute the executable, providing the input file name and an optional output file:  
   
 >UnzipDNA.exe NEB_H5alpha_Accessory_colonization_factor_AcfD.txt out.csv
 
 The first argument is the input file name. The second argument determines the output file name (optional).  
+
+(DNA sequence is from [genbank CP017100](https://www.ncbi.nlm.nih.gov/nuccore/CP017100))  
   
 ## Goal of this program
 
-My goal is to create a fast  unzipping curve calculation program (so I can calculate the unzipping curves of thousands of genes in an acceptable time). However, there is no better method other than brute-force partition function calculation for now. The only thing I can do is to make each loop faster. I can calculate something ahead of time and save it in the program.
+The program calculates unzipping curves rapidly, enabling analysis of numerous genes. Aiming for faster loops, the code precomputes data and stores it.  
 
-It took some thinking to move a majority of calculations from run-time to compile time. After several attempts, I **"constexpred"** most of the calculation overhead. Two look-up tables (LUTs) are created to hold these data. These LUTs are computed and saved in **constexpr std::array**s so I have to use c++20 (or above). The drawback is that the compile time is very long, thousands of times longer than a straightforward C++ program.  
-  
-On Aug/15/2023, I implemented multithreading. The execution speed increased by another factor of 10-20.  
-  
-*At the current stage, this program is >1,000 times faster than my proof-of-concept python code.*
+I **"constexpr**-ed" most of the calculation overhead. Two look-up tables (LUTs) are created to hold these data. These LUTs are computed and saved in **constexpr std::array** containers (c++20 or above is thus required). The compile time as a drawback, is thousands of times longer than a straightforward C++ program.  
+
+### Multithreading Augmentation
+
+Implemented on Aug/15/2023, multithreading improved execution speed by additional 10-20 times.  
+
+### Performance Milestone
+
+The program now performs over 1,000 times faster than the initial Python code.
   
 ## DNA unzipping theory
 
 ![image](https://github.com/Taomihog/unzipDNA/assets/110962921/710f75ad-8ba1-4234-a182-a5a5bb144cf1)
 
-**Figure above shows DNA unzipping experiment on a 4.4 kb DNA**. Single-molecule measurement (blue) and the predicted curve by this program (black) agree well.  
+**Figure above shows DNA unzipping experiment on a 4.4 kb DNA**. The program's predicted unzipping curve (black) aligns well with actual single-molecule measurements (blue), showcasing its accuracy.
   
 Further reading on DNA unzipping experiment and theory:  
 
