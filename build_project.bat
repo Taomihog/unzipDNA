@@ -1,30 +1,17 @@
 @ echo off
-set /P LUT_SIZE="Enter look up table size (Default=128): "
-if "%LUT_SIZE%" == "" set "LUT_SIZE=128"
-
-cd /d "%~dp0"
-if not exist build mkdir build
-cd build
+set /P LUT_SIZE="Enter look up table size (Default=100): "
+if "%LUT_SIZE%" == "" set "LUT_SIZE=100"
 
 for %%f in (*.o *.lib) do (
     del "%%f"
 )
 
 set start_time=%TIME%
+echo Compiling started at %start_time%
 
-echo Building BPEnergy.lib...
-REM basepair energy related stuff
-g++ -c ../BPEnergy/BPEnergy.cpp -o BPEnergy.o
-ar rcs BPEnergy.lib BPEnergy.o
-
-echo Building UnzipLUT.lib...
-REM create LUT
-g++ -c ../UnzipLUT/UnzipLUT.cpp -std=c++20 -fconstexpr-ops-limit=100000000000 -DJ_SIZE=%LUT_SIZE% -DEXT_SIZE=%LUT_SIZE% -o UnzipLUT.o
-ar rcs UnzipLUT.lib UnzipLUT.o
-
-echo Building main...
+echo Building...
 REM executable
-g++ ../main.cpp -L. -lUnzipLUT -lBPEnergy -o UnzipDNA_%LUT_SIZE%x%LUT_SIZE%.exe
+g++ -std=c++20 -fconstexpr-ops-limit=100000000000 main.cpp utils.cpp -DJ_SIZE=%LUT_SIZE% -DEXT_SIZE=%LUT_SIZE% -o UnzipDNA.exe
 
 set end_time=%TIME%
 for /f "tokens=1-3 delims=:." %%a in ("%start_time%") do (
@@ -34,6 +21,8 @@ for /f "tokens=1-3 delims=:." %%a in ("%end_time%") do (
     set /a "end_seconds=(((%%a*60)+%%b)*60)+%%c"
 )
 
+echo Compiling finished at %end_time%
+
 REM Calculate time difference in seconds
 set /a "time_difference=end_seconds-start_seconds"
 set /a "hours=time_difference/3600"
@@ -42,7 +31,7 @@ set /a "seconds=time_difference%%60"
 set "time_difference=%hours% hour %minutes% minute %seconds% second."
 echo Compiled in: %time_difference% 
 
-echo Testing the program..
-UnzipDNA_%LUT_SIZE%x%LUT_SIZE%.exe ../exampleData.txt ..//out_exampleData_%LUT_SIZE%x%LUT_SIZE%.csv
-
-cd ..
+if exist exampleData.txt (
+    echo Testing the program..
+    UnzipDNA.exe NEB_H5alpha_Accessory_colonization_factor_AcfD.txt out.csv
+)

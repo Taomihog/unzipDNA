@@ -14,27 +14,31 @@ import numpy as np
 import time
 import os
 
-pyResult = pd.read_csv("standard.txt",delimiter='\t')
+# pyResult = pd.read_csv("standard.txt",delimiter='\t')
 
 fig,ax = plt.subplots(figsize=(16, 4))
 
 folder_path = os.getcwd()
-prefix = "out_exampleData_"
+prefix = "out"
 
 files_with_prefix = [f for f in os.listdir(folder_path) if f.startswith(prefix)]
+
+# ax.plot(pyResult['# zMean'],pyResult['FMean'], "k", linewidth = 2, label = "python code")
 
 for file in files_with_prefix:
     print(file) 
     cppResult = pd.read_csv(file)
     ax.plot(cppResult['DNA extension (nm)'],cppResult['average force (pN)'], '--', 
-            label = file[len(prefix):])
+            label = "this_program, LUT="+file[len(prefix):-len(".csv")])
 
-ax.plot(pyResult['# zMean'],pyResult['FMean'], "k", linewidth = 2, label = "python code")
 
-plt.ylim(10,20)
-plt.xlim(600,5500)
+plt.ylim(9.8,18.2)
+# plt.ylim(0,30)
+
+plt.xlim(650,5500)
 plt.xlabel("extension (nm)")
 plt.ylabel("force (pN")
-plt.legend()
+plt.legend(loc='best')
+plt.savefig("result.svg", dpi = 600)
 plt.show()
 

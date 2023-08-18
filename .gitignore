@@ -4,6 +4,7 @@ out/*
 build/*
 .vscode/*
 reference/*
+build/*
 
 # Prerequisites
 *.d
@@ -34,10 +35,12 @@ reference/*
 *.lib
 
 # Executables
-*.exe
+# *.exe
 *.out
 *.app
 
 
 *.csv
+*.svg
 *.txt
+*.py

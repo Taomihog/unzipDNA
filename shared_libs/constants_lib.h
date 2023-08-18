@@ -1,12 +1,38 @@
-#include "../include/Math_constexpr.h"
+#pragma once
 
+//Constants
+namespace Const {
+    constexpr double Joul = 4184;//Joul-Calorie conversion
+    constexpr double Avogadro = 6.022E+23;
+    constexpr double Boltzmann = 0.0138065;
+    constexpr double pNnm = 1.0e21;
+}
+
+//Experiment conditions
+namespace Condition {
+    constexpr double Temperature = 298.15;
+    constexpr double kT = Temperature * Const::Boltzmann;
+    constexpr int ArmLength = 2200;//total length of the 2 dsDNA arms, unit is base-pair.
+    constexpr double PillarStiffness = 0.07406;//spring constant of the pillar/optical trap/micro-needle/etc that is used for stretching.
+    constexpr double SaltConc = 100; //salt concentration in mM, this the the salt concentraion or the unzip experiment;
+}
+
+//====================================DNA mechanical parameters======================================
+//These are pseudo constants..they are salt dependent and temperature dependent
+namespace DNAParams{
+    constexpr double LPDS = 51.97;//dsDNA persistence length
+    constexpr double KDS = 1318;//dsDNA elastic modulus
+    constexpr double L0DS = 0.338;//dsDNA contour length per bp
+    constexpr double LPSS = 0.765;//ssDNA persistence length
+    constexpr double KSS = 470;//ssDNA elastic modulus  
+    constexpr double L0SS = 0.554;//ssDNA contour length per nt
+}
+
+//====================================basepair energy measured by Huguet et al===============================
+//ref: Huguet, Josep M., et al. (2010) PNAS
 namespace BPEnergy {
     
-    constexpr double SaltConc = 100; //salt concentration in mM, this the the salt concentraion or the unzip experiment;
-    const double EffSaltConc = Math_constexpr::Ln(SaltConc * 0.001) / 298.0;//298.0 K is where the energy was measured in Huguet paper, it is not equal to Condition::temperature
 
-    //====================================basepair energy measured by Huguet et al===============================
-    //ref: Huguet, Josep M., et al. (2010) PNAS
     constexpr int LUTsize = 4;
 
     constexpr double LUTdH[LUTsize][LUTsize] = {
@@ -40,6 +66,8 @@ namespace BPEnergy {
         }
 
         private:
+
+
         constexpr int bp2idx(char base) const {
             switch (base) {
             case 'a':

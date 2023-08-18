@@ -1,16 +1,14 @@
 #pragma once
 
 #include <limits>
-#include <array>
 
-
-namespace Math_constexpr{
+namespace MyMath{
     
     constexpr double Inf = std::numeric_limits<double>::infinity(); 
+    constexpr double VeryLargeNumber = 1.0e20;
     constexpr double NaN = std::numeric_limits<double>::quiet_NaN();
     constexpr double Pi = 3.1415926535897932384626433832795;
     constexpr size_t precision_ln = 30; 
-    constexpr double tor_binary_search = 1.0e-10;
 
     //Newton-Raphson method for root calculation
     constexpr double Sqrt(double x) {
@@ -72,14 +70,6 @@ namespace Math_constexpr{
         return x > 0.0 ? x : -x;
     }
 
-    constexpr double Tanh(double x) {
-        //the polyn formula is copied from 
-        //https://math.stackexchange.com/questions/107292/rapid-approximation-of-tanhx
-        return 
-        (-.67436811832e-5+(.2468149110712040+(.583691066395175e-1+.3357335044280075e-1*x)*x)*x)/
-        (.2464845986383725+(.609347197060491e-1+(.1086202599228572+.2874707922475963e-1*x)*x)*x);
-    }
-
     constexpr double Ln(double x) {
         //I wrote this! Haha:)
         
@@ -87,11 +77,11 @@ namespace Math_constexpr{
             return 1.0 / 0.0;//err;
         }
         
-        if (x < 0.25) {
+        if (x < 1.0) {
             return -Ln(1.0 / x);
         }
-        if (x > 4.0 ) {;
-            return Ln(x * 0.5) + 0.69314718055994530941723212145818;
+        if (x > 3.0 ) {;
+            return 1.0 + Ln(x * 0.36787944117144232159552377016146);
         }
         //calculate x if 1.0 <= x <= 4.0
         double y = (x - 1) / (x + 1);
@@ -100,7 +90,7 @@ namespace Math_constexpr{
         double sum = ypow;
         for (size_t i = 1; i <= precision_ln; ++i) {
             ypow *= ysq;
-            sum += ypow/(2*i + 1);
+            sum += ypow/(2.0 * i + 1);
         }
         return 2.0 * sum;
     }
@@ -115,14 +105,15 @@ namespace Math_constexpr{
         }
         double product = 1.0;//x**0/0!
         double sum1 = product;
-        double sum2 = 0.0;
+        double sum2 = 0.0f;
         int i = 1;
-        for (; i <= 15; ++i){
-            product *= x;
+        for (; i <= 10; ++i){
             product /= 2*i - 1;//x**1/1!, ..
-            sum2 += product;
             product *= x;
+            sum2 += product;
+
             product /= 2*i; //x**2/2!, ...
+            product *= x;
             sum1 += product;
         }
         product *= x;
@@ -130,6 +121,52 @@ namespace Math_constexpr{
         sum2 += product;
         
         return sum1/sum2;
+    }
+
+    // constexpr double Tanh_coarse(double x) {
+    //     //the polyn formula is copied from 
+    //     //https://math.stackexchange.com/questions/107292/rapid-approximation-of-tanhx
+    //     return 
+    //     (-.67436811832e-5+(.2468149110712040+(.583691066395175e-1+.3357335044280075e-1*x)*x)*x)/
+    //     (.2464845986383725+(.609347197060491e-1+(.1086202599228572+.2874707922475963e-1*x)*x)*x);
+    // }
+
+    constexpr double Tanh(double x) {
+        return 1.0 / Coth(x);
+    }
+
+    constexpr double Langevin(double x) {
+        if ( x > 7.9608220) {
+            // I compared Coth(x) and the np.cosh(x)/np.sinh(x), and 1, and figured out this value.
+            //above this value, 1.0 is more close to Coth(x).
+            //this value depends on how many terms are used of course.
+            return 1.0 - 1.0 / x;
+        }
+        double product = x*x;//x**0/0!
+        double factorial = 6;//2!
+        double sum1 = 1.0/2.0 - 1.0 / 6.0;
+        double sum2 = 1.0;
+        for (int i = 2; i <= 10; ++i){
+            sum2 += product /factorial;
+            factorial *= 2.0 * i;
+            sum1 += product * (1.0/factorial - 1.0 /factorial/(2.0 * i + 1.0));
+            factorial *= (2.0 * i + 1.0);
+            product *= x*x;
+        }
+        return x*sum1/sum2;
+    }
+
+    constexpr double Langevin_integ(double x) {
+        // = ln(sinh(x)/x)
+        double sum = 0.0;
+        double factor = 1.0;
+        double product = 1.0;
+        for (double i = 1.0; i < 20.0; ++i) {
+            sum += factor;
+            factor *= (x * x /(i * 2.0) / (i * 2.0 + 1.0));
+        }
+        //return sum;
+        return Ln(sum);
     }
 
 
@@ -146,10 +183,6 @@ namespace Math_constexpr{
     constexpr double Cbrt_test_res = Cbrt(8.0);
     static_assert(Cbrt_test_res > 1.9999999999);
     static_assert(Cbrt_test_res < 2.0000000001);
-
-    constexpr double Tanh_test_res = Tanh(0.4);
-    static_assert(Tanh_test_res > 0.379922);//This is not what tanh(0.4) really is, this is just a test to make sure it return a valuel
-    static_assert(Tanh_test_res < 0.379923);
 
     constexpr double Ln_test_res = Ln(45);
     static_assert(Ln_test_res > 3.80666);
