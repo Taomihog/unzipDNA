@@ -136,10 +136,7 @@ namespace MyMath{
     }
 
     constexpr double Langevin(double x) {
-        if ( x > 7.9608220) {
-            // I compared Coth(x) and the np.cosh(x)/np.sinh(x), and 1, and figured out this value.
-            //above this value, 1.0 is more close to Coth(x).
-            //this value depends on how many terms are used of course.
+        if ( x > 7.9608220) {//see my comment in Coth()
             return 1.0 - 1.0 / x;
         }
         double product = x*x;//x**0/0!
@@ -157,6 +154,9 @@ namespace MyMath{
     }
 
     constexpr double Langevin_integ(double x) {
+        if ( x > 7.9608220) {//see my comment in Coth()
+            return x - Ln(x);
+        }
         // = ln(sinh(x)/x)
         double sum = 0.0;
         double factor = 1.0;
