@@ -30,7 +30,7 @@ It took some thinking to move majority of calculation from run-time to compile t
   
 On Aug/15/2023, I implemented multithreading. The execution speed increased by another factor of 10-20.  
   
-*At the current stage, this program is ~ 10,000 times faster than my proof-of-concept python code.*
+*At the current stage, this program is >1,000 times faster than my proof-of-concept python code.*
   
 ## DNA unzipping theory
 
