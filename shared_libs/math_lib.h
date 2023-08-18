@@ -154,10 +154,12 @@ namespace MyMath{
     }
 
     constexpr double Langevin_integ(double x) {
-        if ( x > 7.9608220) {//see my comment in Coth()
-            return x - Ln(x);
-        }
         // = ln(sinh(x)/x)
+        
+        if ( x > 7.9608220) {//see my comment in Coth()
+            return (x - 7.9608220) - Ln(x / 7.9608220) + 5.1931424368760504294482139411658;
+        }
+        
         double sum = 0.0;
         double factor = 1.0;
         double product = 1.0;
