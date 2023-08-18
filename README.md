@@ -28,9 +28,7 @@ The first argument is the input file name. The second argument determines the ou
   
 ## Goal of this program
 
-The program calculates unzipping curves rapidly, enabling analysis of numerous genes. Aiming for faster loops, the code precomputes data and stores it.  
-
-I **"constexpr**-ed" most of the calculation overhead. Two look-up tables (LUTs) are created to hold these data. These LUTs are computed and saved in **constexpr std::array** containers (c++20 or above is thus required). The compile time as a drawback, is thousands of times longer than a straightforward C++ program.  
+The program calculates unzipping curves rapidly, enabling analysis of numerous genes. Aiming for faster loops, the code precomputes data and stores it. Two look-up tables (LUTs) are computed and saved in **constexpr std::array** containers (c++20 or above is thus required). The compile time as a trade-off is thousands of times longer than a straightforward C++ program.  
 
 ### Multithreading Augmentation
 
