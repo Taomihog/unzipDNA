@@ -1,4 +1,4 @@
-# DNA Unzipping Curve Calculator (ver.3)
+# DNA Unzipping Curve Calculator
   
 ## How to build the project
 
@@ -12,7 +12,7 @@ For Windows OS, run **build_project.bat** to build with additional options and t
 
 (For Linux user, ChatGPT should be able to translate the .bat file to a shell script.)  
 
-The lookup table size is controlled by macro **J_SIZE**. The larger the number, the accurate the result. Increasing this number can significantly increase the compiling time.
+The lookup table size is controlled by macro **J_SIZE**. The larger the number, the more accurate the result. Increasing this number can significantly increase the compiling time.
   
 ## Do some tests using the example data
 
