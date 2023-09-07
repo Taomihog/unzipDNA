@@ -44,3 +44,5 @@ build/*
 *.svg
 *.txt
 *.py
+
+!NEB_H5alpha_Accessory_colonization_factor_AcfD.txt
