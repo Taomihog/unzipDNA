@@ -2,7 +2,7 @@
   
 ## Command For Compilation  
 
-### Compile
+### Compile / Make the executable
 
 Use this command for compiling on both Windows and Linux systems:  
   
@@ -14,25 +14,27 @@ For Windows OS, employ the **build_project.bat** script to enable additional opt
 
 ![image](doc/Compile_time_200x200.png)
 
-*Note: Note: Linux users can translate the **.bat** file to a shell script using ChatGPT*  
+**Note:**  
+- The compiling takes a long time, but the execution is very fast (0.05 s/kb at 1 nm resolution). 
+- Linux users can translate the **.bat** file to a shell script using *ChatGPT*.   
   
-### Running Tests
+### How to use
 
-Execute the executable, providing the input file name and an optional output file:  
+Execute the executable by providing an input file name and an optional output file:  
   
->UnzipDNA.exe NEB_H5alpha_Accessory_colonization_factor_AcfD.txt out.csv
-
-The first argument is the input file name. The second argument determines the output file name (optional).  
+>UnzipDNA.exe NEB_H5alpha_Accessory_colonization_factor_AcfD.txt out.csv  
 
 (DNA sequence is from [genbank CP017100](https://www.ncbi.nlm.nih.gov/nuccore/CP017100))  
   
 ## Goal of this program
 
-The program calculates unzipping curves rapidly, enabling analysis of numerous genes. Aiming for faster loops, the code precomputes data and stores it. Two look-up tables (LUTs) are computed and saved in **constexpr std::array** containers (c++20 or above is thus required). The compile time as a trade-off is thousands of times longer than a straightforward C++ program.  
+- The program calculates unzipping curves rapidly, enabling analysis of numerous genes.
+- Aiming for faster loops, the code precomputes two look-up tables (LUTs) in compile time. The LUTs are saved in 2 **constexpr std::array** (c++20 or above is thus required).
+- The compile time as a trade-off is thousands of times longer than a straightforward C++ program.  
 
 ### Multithreading Augmentation
 
-Implemented on Aug/15/2023, multithreading improved execution speed by additional 10-20 times.  
+I implemented multithreading on Aug/15/2023, and improved execution speed by additional 10-20 times.  
 
 ### Performance Milestone
 
